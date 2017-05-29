@@ -1,7 +1,13 @@
+import six
 from datetime import datetime, timedelta
-from Queue import Queue, Empty
 from threading import Lock
 from .errors import ClientUnavailableError
+
+if six.PY2:
+    from Queue import Queue, Empty
+elif six.PY3:
+    from queue import Queue, Empty
+
 
 class Connection(object):
     def __init__(self, connection):
@@ -13,6 +19,7 @@ class Connection(object):
 
     def __getattr__(self, attr):
         return getattr(self.connection, attr)
+
 
 class ConnectionPool(object):
     def __init__(self, get_connection, initial_connections=2, max_connections=8, recycle=None):

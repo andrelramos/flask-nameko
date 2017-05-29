@@ -1,4 +1,6 @@
 import re
+import six
+
 from flask import g
 from nameko.standalone.rpc import ClusterRpcProxy
 from .connection_pool import ConnectionPool
@@ -58,7 +60,7 @@ class FlaskPooledClusterRpcProxy(PooledClusterRpcProxy):
 
     def init_app(self, app):
         config = dict()
-        for key, val in app.config.iteritems():
+        for key, val in six.iteritems(app.config):
             match = re.match(r"NAMEKO\_(?P<name>.*)", key)
             if match:
                 config[match.group('name')] = val
